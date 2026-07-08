@@ -24,12 +24,12 @@ public static class FileEndpoints
                 Directory.CreateDirectory(uploadsFolder);
 
             // Generate unique filename
-            var ext = Path.GetExtension(file.FileName);
             var fileName = $"{Guid.NewGuid()}{ext}";
             var filePath = Path.Combine(uploadsFolder, fileName);
 
             using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
+
 
             return Results.Ok(new
             {
