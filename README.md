@@ -438,13 +438,6 @@ The API follows standard HTTP status code conventions:
 
 ---
 
-## Known Issues
-
-| Issue | Location | Status |
-|-------|----------|--------|
-| Duplicate variable declaration (`ext`) | `FileEndpoints.cs` line 27 | ⚠️ To Fix |
-
----
 
 ## License
 
