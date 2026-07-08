@@ -4,7 +4,7 @@ public static class FileEndpoints
 {
     public static void MapFileEndpoints(this WebApplication app)
     {
-        app.MapPost("/api/files/upload", async (IFormFile file) =>
+        app.MapPost("/api/files/upload", async (IFormFile file, HttpContext http) =>
         {
             if (file == null || file.Length == 0)
                 return Results.BadRequest(new { message = "No file uploaded" });
@@ -12,6 +12,12 @@ public static class FileEndpoints
             // Validasi ukuran (max 5MB)
             if (file.Length > 5 * 1024 * 1024)
                 return Results.BadRequest(new { message = "File too large (max 5MB)" });
+
+            // File Type validation
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(ext))
+                return Results.BadRequest(new { message = "Invalid file type" });
 
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
             if (!Directory.Exists(uploadsFolder))
@@ -32,6 +38,8 @@ public static class FileEndpoints
                 size = file.Length,
                 url = $"/uploads/{fileName}"
             });
-        }).DisableAntiforgery(); // Perlu untuk API (bukan form web)
+        })
+        .RequireAuthorization()
+        .DisableAntiforgery();
     }
 }
