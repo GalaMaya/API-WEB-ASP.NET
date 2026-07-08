@@ -444,5 +444,3 @@ The API follows standard HTTP status code conventions:
 This project is for educational purposes.
 
 ---
-
-**Last Updated**: January 2024
