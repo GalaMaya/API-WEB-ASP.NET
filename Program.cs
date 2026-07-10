@@ -28,18 +28,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// ===== MVC Configuration =====
+builder.Services.AddControllersWithViews();
+
 // ===== Dependency Injection =====
 builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
+// ===== MVC Middleware =====
+app.UseRouting();
+
 // ===== Middleware Pipeline =====
 app.UseAuthentication();  // Validasi token
 app.UseAuthorization();   // Cek permission
-app.UseStaticFiles();     // Serve file dari folder uploads
 
 // ===== Map Endpoints =====
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Account}/{action=Register}/{id?}");
+
 app.MapAuthEndpoints();
 app.MapUserEndpoints();
 app.MapFileEndpoints();
